@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$//Husky UI/JVM.iml" filepath="$PROJECT_DIR$//Husky UI/JVM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../Blue-Base/JVM/Blue Base.iml" filepath="$PROJECT_DIR$/../../Blue-Base/JVM/Blue Base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Core/JVM/Husky UI.iml" filepath="$PROJECT_DIR$/../Core/JVM/Husky UI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Husky UI JVM/JVM.iml" filepath="$PROJECT_DIR$/Husky UI JVM/JVM.iml" />
+      <module fileurl="file://U:\Libraries\Programs\Git\Telegram-RP\lib\Husky-UI\JVM\\Husky UI\JVM.iml" filepath="U:\Libraries\Programs\Git\Telegram-RP\lib\Husky-UI\JVM\\Husky UI\JVM.iml" />
     </modules>
   </component>
 </project>
