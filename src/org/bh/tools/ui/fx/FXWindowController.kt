@@ -1,10 +1,7 @@
 package org.bh.tools.ui.fx
 
 import javafx.fxml.FXMLLoader
-import javafx.scene.layout.Pane
 import java.io.IOException
-import netscape.javascript.JSObject.getWindow
-import com.sun.javaws.ui.SplashScreen.hide
 import javafx.scene.*
 import javafx.stage.Stage
 import org.bh.tools.base.struct.UIViewController
