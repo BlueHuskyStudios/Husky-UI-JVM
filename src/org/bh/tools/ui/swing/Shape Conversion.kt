@@ -1,11 +1,8 @@
 package org.bh.tools.ui.swing
 
-import org.bh.tools.base.abstraction.Fraction
-import org.bh.tools.base.math.float32Value
-import org.bh.tools.base.math.geometry.ComputablePoint
-import org.bh.tools.base.math.geometry.FractionLineSegment
-import org.bh.tools.base.math.geometry.FractionPoint
-import org.bh.tools.base.math.geometry.FractionRect
+import org.bh.tools.base.abstraction.*
+import org.bh.tools.base.math.*
+import org.bh.tools.base.math.geometry.*
 import java.awt.Rectangle
 import java.awt.Shape
 import java.awt.geom.AffineTransform
@@ -22,9 +19,9 @@ import java.awt.geom.Rectangle2D
  */
 val FractionRect.awtShapeValue: Shape get() = this.awtValue
 
-val FractionLineSegment.awtShapeValue: Shape get() = object : Shape {
+val FractionLineSegment.awtShapeValue: Shape get() = object : Shape { // TODO: Can this be simplified? Like, with an API call?
 
-    private val line get() = this@awtShapeValue
+    private val line: FractionLineSegment get() = this@awtShapeValue
 
 
     override fun contains(x: Double, y: Double): Boolean = contains(FractionPoint(x, y))
@@ -48,57 +45,65 @@ val FractionLineSegment.awtShapeValue: Shape get() = object : Shape {
     override fun getBounds2D(): Rectangle2D = line.bounds.awtValue
 
     // TODO: Test to ensure this works as expected
-    override fun getPathIterator(at: AffineTransform?): PathIterator = object : PathIterator {
-
-        private val transformedLine = this@awtShapeValue.transformed(at)
-        private var isEndPoint = false
-        private var processedEndPoint = false
-
-        override fun next() {
-            isEndPoint = true
-        }
-
-        override fun isDone(): Boolean {
-            return processedEndPoint
-        }
-
-        override fun getWindingRule() = WIND_NON_ZERO
-
-        override fun currentSegment(coords: FloatArray?): Int {
-            if (coords == null) {
-                return SEG_CLOSE
-            }
-
-            coords[0] = (if (isEndPoint) end else start).x.float32Value
-            coords[1] = (if (isEndPoint) end else start).y.float32Value
-
-            if (isEndPoint) {
-                processedEndPoint = true
-                return SEG_LINETO
-            } else {
-                return SEG_MOVETO
-            }
-        }
-
-        override fun currentSegment(coords: DoubleArray?): Int {
-            if (coords == null) {
-                return SEG_CLOSE
-            }
-
-            coords[0] = (if (isEndPoint) end else start).x
-            coords[1] = (if (isEndPoint) end else start).y
-
-            if (isEndPoint) {
-                processedEndPoint = true
-                return SEG_LINETO
-            } else {
-                return SEG_MOVETO
-            }
-        }
+    override fun getPathIterator(at: AffineTransform?): PathIterator {
+        return getPathIterator(at, flatness = defaultFloat64CalculationTolerance)
     }
 
-    override fun getPathIterator(at: AffineTransform?, flatness: Double): PathIterator {
-        return getPathIterator(at, flatness)
+    override fun getPathIterator(at: AffineTransform?, flatness: Float64): PathIterator =
+            object : PathIterator {
+
+                private val transformedLine = at?.let { transformed(it) }
+                private var isEndPoint = false
+                private var processedEndPoint = false
+
+                override fun next() {
+                    isEndPoint = true
+                }
+
+                override fun isDone(): Boolean {
+                    return processedEndPoint
+                }
+
+                override fun getWindingRule() = WIND_NON_ZERO
+
+                override fun currentSegment(coords: FloatArray?): Int {
+                    if (coords == null) {
+                        return SEG_CLOSE
+                    }
+
+                    coords[0] = (if (isEndPoint) end else start).x.float32Value
+                    coords[1] = (if (isEndPoint) end else start).y.float32Value
+
+                    return if (isEndPoint) {
+                        processedEndPoint = true
+                        SEG_LINETO
+                    }
+                    else {
+                        SEG_MOVETO
+                    }
+                }
+
+                override fun currentSegment(coords: DoubleArray?): Int {
+                    if (coords == null) {
+                        return SEG_CLOSE
+                    }
+
+                    coords[0] = (if (isEndPoint) end else start).x
+                    coords[1] = (if (isEndPoint) end else start).y
+
+                    return if (isEndPoint) {
+                        processedEndPoint = true
+                        SEG_LINETO
+                    }
+                    else {
+                        SEG_MOVETO
+                    }
+                }
+            }
+
+    fun transformed(at: AffineTransform): Shape {
+        println("TODO: Actually transform")
+        return this
     }
 
     override fun intersects(x: Double, y: Double, width: Double, height: Double): Boolean
