@@ -11,7 +11,7 @@ import javax.swing.*
  * @since 2018-04-30
  */
 
-object SwingHuskyUserPrompt: HuskyUserPrompt<JComponent> {
+object SwingUserPrompt: UserPrompt<JComponent> {
     override fun showOptionDialog(
             parentComponent: JComponent?,
             title: String,
