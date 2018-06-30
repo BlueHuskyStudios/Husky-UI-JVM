@@ -3,6 +3,7 @@ package org.bh.tools.ui.fx
 import javafx.stage.Stage
 import org.bh.tools.base.struct.*
 
+
 /**
  * Husky UI's wrapper around a JavaFX Stage
  *
